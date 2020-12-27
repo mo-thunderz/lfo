@@ -1,7 +1,7 @@
 # LFO
 LFO for Arduino Due (and other Arduino/Teensy/exp32/etc). LFO can be free-running, or synced to a master-clock.
 
-Youtube video will follow soon
+See as well my Youtube video on how to use this class: https://youtu.be/ch03-75Fkuw
 
 # Installation
 1) Make a new folder called "lfo" in your arduino libraries folder
