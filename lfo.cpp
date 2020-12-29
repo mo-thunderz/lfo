@@ -1,3 +1,10 @@
+//----------------------------------//
+// LFO class for Arduino
+// by mo-thunderz
+// version 1.1
+// last update: 29.12.2020
+//----------------------------------//
+
 #include "Arduino.h"
 #include "lfo.h"
 
@@ -5,7 +12,7 @@ lfo::lfo(int dacSize)
 {
 	_dacSize = dacSize;
 	_ampl = dacSize - 1;
-	_ampl_offset = dacSize/2;
+	_ampl_offset = 0;
 }
 
 void lfo::setWaveForm(int l_waveForm)
@@ -53,11 +60,11 @@ void lfo::setMode0Freq(float l_mode0_freq, unsigned long l_t)
 		l_mode0_freq = 0;
 
 	// synchronize the phase of the old freq with the new freq
-	float l_phase_old = (double)(l_t - _t0) * _mode0_freq / 1000000 + _mode0_phase;
-	float l_phase_new = (double)(l_t - _t0) * l_mode0_freq / 1000000;
-	l_phase_old = l_phase_old - floor(l_phase_old);
-	l_phase_new = l_phase_new - floor(l_phase_new);
-	_mode0_phase = l_phase_old - l_phase_new;
+	float _output_phase_old = (double)(l_t - _t0) * _mode0_freq / 1000000 + _mode0_phase_offset;
+	float _output_phase_new = (double)(l_t - _t0) * l_mode0_freq / 1000000;
+	_output_phase_old = _output_phase_old - floor(_output_phase_old);
+	_output_phase_new = _output_phase_new - floor(_output_phase_new);
+	_mode0_phase_offset = _output_phase_old - _output_phase_new;
 
 	_mode0_freq = l_mode0_freq;
 }
@@ -76,15 +83,15 @@ void lfo::setMode1Rate(float l_mode1_rate)
 	_mode1_rate = l_mode1_rate;
 }
 
-void lfo::setMode1Phase(float l_mode1_phase)
+void lfo::setMode1Phase(float l_mode1_phase_offset)
 {
-	_mode1_phase = l_mode1_phase;
+	_mode1_phase_offset = l_mode1_phase_offset;
 }
 
 void lfo::sync(unsigned long l_t)
 {
 	_t0 = l_t;
-	_mode0_phase = 0;
+	_mode0_phase_offset = 0;
 }
 
 int lfo::getWaveForm()
@@ -102,21 +109,35 @@ int lfo::getAmplOffset()
 	return _ampl_offset;
 }
 
+bool lfo::getMode()
+{
+	return _mode;
+}
+
 float lfo::getMode0Freq()
 {
 	return _mode0_freq;
+}
+
+float lfo::getMode1Rate()
+{
+	return _mode1_rate;
+}
+
+float lfo::getPhase()
+{
+	return _output_phase;
 }
 
 int lfo::getWave(unsigned long l_t)
 {
 	int result = 0;
 	int l_ampl = _ampl;
-	double l_phase = 0;
 
 	if(_mode == false)         			// LFO free running
-		l_phase = (double)(l_t - _t0) * _mode0_freq / 1000000 + _mode0_phase;
+		_output_phase = (float)(l_t - _t0) * _mode0_freq / 1000000 + _mode0_phase_offset;
 	else    												// LFO synced
-		l_phase = (double)(l_t - _t0) * _mode1_rate * _mode1_bpm / 60000000 + _mode1_phase;
+		_output_phase = (float)(l_t - _t0) * (float)_mode1_rate * _mode1_bpm / 60000000 + _mode1_phase_offset;
 
 	// Compute correct _ampl_offsetoffset (wave not to exceed 0 to dacSize)
 	int l_ampl_offset = 0;
@@ -133,19 +154,19 @@ int lfo::getWave(unsigned long l_t)
 			return result;
 			break;
 		case 1: // Saw
-			return result = l_ampl * (_dacSize - 1 - ((int)(l_phase * _dacSize)) % _dacSize) / (_dacSize - 1) + l_ampl_offset - l_ampl_half;
+			return result = l_ampl * (_dacSize - 1 - ((int)(_output_phase * _dacSize)) % _dacSize) / (_dacSize - 1) + l_ampl_offset - l_ampl_half;
 			break;
 		case 2: // Triangle
-			if(((int)(2 * l_phase))%2) // up flank
-				return result = abs(l_ampl * (((int)(l_phase * _dacSize * 2)) % _dacSize) / (_dacSize - 1) + l_ampl_offset - l_ampl_half - 1);
+			if(((int)(2 * _output_phase))%2) // up flank
+				return result = abs(l_ampl * (((int)(_output_phase * _dacSize * 2)) % _dacSize) / (_dacSize - 1) + l_ampl_offset - l_ampl_half - 1);
 			else // down flank
-				return result = abs(l_ampl * (_dacSize - ((int)(l_phase * _dacSize * 2)) % _dacSize - 1) / (_dacSize - 1) + l_ampl_offset - l_ampl_half);
+				return result = abs(l_ampl * (_dacSize - ((int)(_output_phase * _dacSize * 2)) % _dacSize - 1) / (_dacSize - 1) + l_ampl_offset - l_ampl_half);
 			break;
 		case 3: // Sin
-			return result = (int) l_ampl_half * cos(2 * _PI * l_phase) + l_ampl_offset;
+			return result = (int) l_ampl_half * cos(2 * _PI * _output_phase) + l_ampl_offset;
 			break;
 		case 4: // Square
-			if(((int)(2 * l_phase))%2)
+			if(((int)(2 * _output_phase))%2)
 				return result = l_ampl_offset - l_ampl_half;
 			else
 				return result = l_ampl_offset + l_ampl_half;
