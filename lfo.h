@@ -39,7 +39,7 @@ class lfo
 		bool            _mode = 0;        	      					// sync mode: false -> free, true -> synced to track
 		float           _mode0_freq = 30;           				// frequency in Hz
 		float           _mode1_bpm = 120;           				// BPM of track
-		int             _mode1_rate = 1;           					// Rate to link to BPM of track
+		float           _mode1_rate = 1;           					// Rate to link to BPM of track
 		float           _mode1_phase = 0;           				// phase of LFO -> scales from 0 to 1
 
 		// time reference needed for sync waves:
