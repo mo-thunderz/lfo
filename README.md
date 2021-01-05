@@ -13,7 +13,7 @@ Please refer to the LFO_example.ino file in the examples folder. This file is wr
 2) Remove the analogWriteResolution(12) statement 
 3) Write to a different port in this statement: 
 analogWrite(DAC0, lfo_class.getWave(t));
-for ESP32 use:
+*) for ESP32 use:
 dacWrite(25, lfo_class.getWave(t));
 
 # Updates
