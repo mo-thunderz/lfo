@@ -49,7 +49,7 @@ void loop() {
   if (t > t_lfo_param_0 + t_lfo_param_delta) {            // check if lfo parameters are to be changed
     lfo_waveform++;
     if (lfo_waveform > 4)
-      lfo_waveform = 0;
+      lfo_waveform = 1;
     lfo_class.setWaveForm(lfo_waveform);
     t_lfo_param_0 = t;
   }
