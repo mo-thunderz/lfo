@@ -50,7 +50,7 @@ void loop() {
 
   analogWrite(LED_pin, lfo_class.getWave(t));          // update LFO and write to DAC
   
-  if (t > t_lfo_param_0 + t_lfo_param_delta) {            // check if lfo parameters are to be changed
+  if ((unsigned long)(t - t_lfo_param_0) > t_lfo_param_delta) {            // check if lfo parameters are to be changed
     lfo_freq++;             // increase LFO speed with 1
     if (lfo_freq > 7)       // reset to 1Hz of the LFO speed exceeds 7
       lfo_freq = 1;
