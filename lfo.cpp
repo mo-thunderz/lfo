@@ -2,7 +2,7 @@
 // LFO class for Arduino
 // by mo-thunderz
 // version 1.1
-// last update: 29.12.2020
+// last update: 22.05.2021
 //----------------------------------//
 
 #include "Arduino.h"
@@ -135,9 +135,9 @@ int lfo::getWave(unsigned long l_t)
 	int l_ampl = _ampl;
 
 	if(_mode == false)         			// LFO free running
-		_output_phase = (float)(l_t - _t0) * _mode0_freq / 1000000 + _mode0_phase_offset;
+		_output_phase = (float)((unsigned long)(l_t - _t0)) * _mode0_freq / 1000000 + _mode0_phase_offset;
 	else    												// LFO synced
-		_output_phase = (float)(l_t - _t0) * (float)_mode1_rate * _mode1_bpm / 60000000 + _mode1_phase_offset;
+		_output_phase = (float)((unsigned long)(l_t - _t0)) * (float)_mode1_rate * _mode1_bpm / 60000000 + _mode1_phase_offset;
 
 	// Compute correct _ampl_offsetoffset (wave not to exceed 0 to dacSize)
 	int l_ampl_offset = 0;
