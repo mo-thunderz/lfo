@@ -30,16 +30,16 @@ class lfo
         void setMode1Bpm(float l_mode1_bpm);                        // set BPM of track for sync mode
         void setMode1Rate(float l_mode1_rate);                      // l_model_rate represents the lfo cycle duration in quarter notes -> see table at the bottom of this file
         void setMode1Phase(float l_mode1_phase_offset);             // set phase offset for sync mode (free mode does not have phase offset as it is free running, though you can use sync(micros) in free mode to set phase to 0)
-        void sync(unsigned long l_t);                                                                                   // function to sync LFO to external trigger -> use sync(micros())
+        void sync(unsigned long l_t);                               // function to sync LFO to external trigger -> use sync(micros())
 
-        int getWaveForm();                                                                                                      // simple get functions as variables are private
+        int getWaveForm();                                          // simple get functions as variables are private
         int getAmpl();
         int getAmplOffset();
         bool getMode();
         float getMode0Freq();
         float getMode1Rate();
-        float getPhase();                                                                                                           // returns relative phase of output signal -> good for triggering LED
-        int getWave(unsigned long l_t);                                                                             // main function that gives the waveformshape at time l_t -> use with getWave(micros())
+        float getPhase();                                           // returns relative phase of output signal -> good for triggering LED
+        int getWave(unsigned long l_t);                             // main function that gives the waveformshape at time l_t -> use with getWave(micros())
 
     private:
         int             _dacSize;                           // DAC size
@@ -59,7 +59,7 @@ class lfo
         float           _mode0_phase_offset = 0;            // phase offset of LFO in free-running mode -> this parameter is used internally to enable a seamless freq change with this function: setMode0Freq(float l_mode0_freq, unsigned long l_t);
 
         // phase of the signal -> is updated whenever getWave() is called -> this phase is useful for triggering an LED -> use getPhase() to retrieve.
-        float                       _output_phase;                                          // net phase of produced waveform -> used to trigger LEDs
+        float                       _output_phase;          // net phase of produced waveform -> used to trigger LEDs
 };
 
 #endif
