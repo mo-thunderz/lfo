@@ -92,3 +92,5 @@ class lfo
 //        14   |   1/56 note
 //        15   |   1/60 note
 //        16   |   1/64 note
+//
+// Big THANKS to othmar52 for providing the table :-)
