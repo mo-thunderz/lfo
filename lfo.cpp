@@ -154,13 +154,13 @@ int lfo::getWave(unsigned long l_t)
 			return result;
 			break;
 		case 1: // Saw
-			return result = l_ampl * (_dacSize - 1 - ((int)(_output_phase * _dacSize)) % _dacSize) / (_dacSize - 1) + l_ampl_offset - l_ampl_half;
+			return result = (1 - ((float)_output_phase - (int)_output_phase)) * l_ampl + l_ampl_offset - l_ampl_half;
 			break;
 		case 2: // Triangle
 			if(((int)(2 * _output_phase))%2) // up flank
-				return result = abs(l_ampl * (((int)(_output_phase * _dacSize * 2)) % _dacSize) / (_dacSize - 1) + l_ampl_offset - l_ampl_half - 1);
+				return result = (((float)_output_phase - (int)_output_phase) * 2) * l_ampl + l_ampl_offset - l_ampl_half - l_ampl;
 			else // down flank
-				return result = abs(l_ampl * (_dacSize - ((int)(_output_phase * _dacSize * 2)) % _dacSize - 1) / (_dacSize - 1) + l_ampl_offset - l_ampl_half);
+				return result = (1 - ((((float)_output_phase - (int)_output_phase) * 2) - 0.5)) * l_ampl + l_ampl_offset - l_ampl;
 			break;
 		case 3: // Sin
 			return result = (int) l_ampl_half * cos(2 * _PI * _output_phase) + l_ampl_offset;
