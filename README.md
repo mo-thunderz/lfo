@@ -17,8 +17,8 @@ analogWrite(DAC0, lfo_class.getWave(t));
 dacWrite(25, lfo_class.getWave(t));
 
 # Updates
-29.12.2020: initially _mode1_rate was setup as an INT. However, that is problematic when rates smaller than 1 are applied. This is now changed to float. I also added version numbering and a few more get functions needed for the Ableton-control SW.
-16.07.2022: updated algorithm for Saw and Triangle to be compatible with Arduino UNO (big thanks to othmar52)
+* 29.12.2020: initially _mode1_rate was setup as an INT. However, that is problematic when rates smaller than 1 are applied. This is now changed to float. I also added version numbering and a few more get functions needed for the Ableton-control SW.
+* 16.07.2022: updated algorithm for Saw and Triangle to be compatible with Arduino UNO (big thanks to othmar52)
 
 Have fun ;-)
 
